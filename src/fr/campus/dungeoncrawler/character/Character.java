@@ -9,6 +9,9 @@ import fr.campus.dungeoncrawler.item.Potion;
 import fr.campus.dungeoncrawler.item.Shield;
 import fr.campus.dungeoncrawler.item.Spell;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe abstraite qui représente le personnage
  * Attributs et comportements de base communs à tous les personnages
@@ -29,6 +32,15 @@ public abstract class Character {
     protected int position = 1;
     protected int maxHealth;
 
+    // Effet temporaire : Coup de tonnerre
+    private boolean thunderStrikeActive = false;
+
+    // Bonus temporaire d'attaque (ex : Arc, Invisibilité)
+    private int attackBonus = 0;
+
+    // Inventaire simplifié de potions
+    private List<Potion> potions = new ArrayList<>();
+
     /**
      * Constructeur d'un personnage
      */
@@ -46,16 +58,104 @@ public abstract class Character {
     public int getAttackPower() {
         Dice d20 = new Dice20();
         int roll = d20.roll();
-       // System.out.println("🎲 Jet de D20 du joueur : " + roll);
+        // System.out.println("🎲 Jet de D20 du joueur : " + roll);
 
         if (roll == 1) {
-        //    System.out.println("❌ Échec critique du joueur ! Attaque échouée.");
+            // System.out.println("❌ Échec critique du joueur ! Attaque échouée.");
             return 0;
         } else if (roll == 20) {
             System.out.println("✅ Réussite critique du joueur ! +2 de force !");
             return this.strength + 2;
         }
         return this.strength;
+    }
+
+    public void increaseAttack(int bonus) {
+        this.attackBonus += bonus;
+    }
+
+    /**
+     * Active ou désactive le Coup de tonnerre
+     */
+    public void setThunderStrikeActive(boolean active) {
+        this.thunderStrikeActive = active;
+    }
+
+    /**
+     * Retourne l'attaque effective, tenant compte du Coup de tonnerre et des bonus
+     */
+    public int getEffectiveAttack() {
+        int baseAttack = this.getAttackPower() + attackBonus;
+        if (thunderStrikeActive) {
+            return baseAttack * 2;
+        }
+        return baseAttack;
+    }
+
+    /**
+     * Réinitialise les effets temporaires (à appeler après chaque combat)
+     */
+    public void afterCombat() {
+        thunderStrikeActive = false;
+        attackBonus = 0;
+    }
+
+    // === Gestion potions ===
+
+    /**
+     * Ajoute une potion à l'inventaire
+     */
+    public void addPotion(Potion potion) {
+        potions.add(potion);
+        System.out.println("🍷 Potion ajoutée : " + potion.getName());
+    }
+
+    /**
+     * Vérifie si le personnage possède une potion par nom (insensible à la casse)
+     */
+    public boolean hasPotion(String potionName) {
+        for (Potion p : potions) {
+            if (p.getName().equalsIgnoreCase(potionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Supprime une potion de l'inventaire par nom (consommée)
+     */
+    public void removePotion(String potionName) {
+        potions.removeIf(p -> p.getName().equalsIgnoreCase(potionName));
+    }
+
+    /**
+     * Utilise une potion : applique l'effet selon le nom, puis la retire de l'inventaire
+     */
+    public void usePotion(String potionName) {
+        if (!hasPotion(potionName)) {
+            System.out.println("❌ Vous ne possédez pas cette potion.");
+            return;
+        }
+
+        if (potionName.equalsIgnoreCase("Coup de tonnerre")) {
+            setThunderStrikeActive(true);
+            System.out.println("⚡ Coup de tonnerre activé !");
+        } else {
+            // Par défaut, on cherche la potion et applique son effet de soin
+            for (Potion p : potions) {
+                if (p.getName().equalsIgnoreCase(potionName)) {
+                    this.health += p.getHealAmount();
+                    if (this.health > maxHealth) {
+                        this.health = maxHealth;
+                    }
+                    System.out.println("🩺 Vous avez utilisé une potion de soin, vie à " + this.health);
+                    break;
+                }
+            }
+        }
+
+        removePotion(potionName);
     }
 
     public abstract void attackEnemy();
@@ -110,12 +210,9 @@ public abstract class Character {
 
     // === Objets et équipements ===
     public void receivePotion(Potion potion) {
+        // On ajoute la potion à l'inventaire (ne soigne pas directement ici)
         System.out.println("🍷 Potion reçue : " + potion.getName());
-        this.health += potion.getHealAmount();
-        if (this.health > maxHealth) {
-            this.health = maxHealth;
-        }
-        System.out.println("🩺 Votre vie est maintenant de : " + this.health);
+        addPotion(potion);
     }
 
     public void addSpell(Spell spell) {

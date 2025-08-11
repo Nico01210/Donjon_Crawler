@@ -59,6 +59,20 @@ public class Board {
                 y = pos / WIDTH;
                 boardSetCell(x, y, new EnemyCell(this, x, y, new Gobelin())); // ✅ Nouveau Gobelin
             }
+        // 4 Orcs - ✅ Chaque Orc est une NOUVELLE instance
+        for (int i = 0; i < 4; i++) {
+            pos = positions.get(index++);
+            x = pos % WIDTH;
+            y = pos / WIDTH;
+            boardSetCell(x, y, new EnemyCell(this, x, y, new Orc())); // ✅ Nouveau Gobelin
+        }
+        // 5 mauvais esprits - ✅ Chaque mauvais esprit est une NOUVELLE instance
+        for (int i = 0; i < 5; i++) {
+            pos = positions.get(index++);
+            x = pos % WIDTH;
+            y = pos / WIDTH;
+            boardSetCell(x, y, new EnemyCell(this, x, y, new MauvaisEsprit())); // ✅ Nouveau Gobelin
+        }
 
             // Ajout des bonus (24) - ✅ Nouvelles instances aussi
 

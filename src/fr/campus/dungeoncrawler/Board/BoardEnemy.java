@@ -17,14 +17,10 @@ public class BoardEnemy extends Enemy {
     public int getAttackPower() {
         Dice d20 = new Dice20();
         int roll = d20.roll();
-        // Pour ne pas afficher le jet de dé, commente la ligne suivante
-        // System.out.println("🎲 Jet de D20 de l’ennemi : " + roll);
 
         if (roll == 1) {
-            // System.out.println("❌ Échec critique de l’ennemi !");
             return 0;
         } else if (roll == 20) {
-            // System.out.println("🔥 Réussite critique de l’ennemi ! +2 de force !");
             return this.getAttack() + 2;
         }
 
@@ -33,6 +29,11 @@ public class BoardEnemy extends Enemy {
 
     public void fight(Character player) {
         System.out.println("👹 Combat engagé avec " + getName() + " !");
+
+        // Avant le combat, vérifier si le joueur veut utiliser "Coup de tonnerre"
+        if (player.hasPotion("Coup de tonnerre")) {
+            player.usePotion("Coup de tonnerre");  // active le bonus et enlève la potion
+        }
         while (this.getHealth() > 0 && player.getHealth() > 0) {
             // L'ennemi attaque
             int enemyAttack = this.getAttackPower();
@@ -43,10 +44,14 @@ public class BoardEnemy extends Enemy {
                 break;
             }
 
-            // Le joueur attaque
-            int playerAttack = player.getAttackPower();
+            // Le joueur attaque (en tenant compte des bonus et potions)
+            int playerAttack = player.getEffectiveAttack(); // ← nouvelle méthode dans Character
             this.receiveDamage(playerAttack);
             System.out.println(player.getName() + " riposte avec " + playerAttack + " points de dégâts !");
+
+            // Désactivation des effets temporaires comme Coup de tonnerre
+            player.afterCombat();
+
             if (this.getHealth() <= 0) {
                 System.out.println(getName() + " est mort !");
                 break;
@@ -57,12 +62,19 @@ public class BoardEnemy extends Enemy {
         }
     }
 
-
     public boolean isDefeated() {
         return this.getHealth() <= 0;
     }
 
     public void interact(Character character, GameStatus gameStatus, Enemy enemy, Board board) {
+
+        // Exemple : si le joueur a choisi d'utiliser Coup de tonnerre
+        if (character.hasPotion("Coup de tonnerre")) { // méthode fictive à implémenter
+            character.setThunderStrikeActive(true);
+            System.out.println("⚡ Coup de tonnerre activé pour le prochain combat !");
+            character.removePotion("Coup de tonnerre"); // Consomme la potion
+        }
+
         TurnBasedCombat combat = new TurnBasedCombat(character, enemy, board, gameStatus);
         combat.start();
     }
