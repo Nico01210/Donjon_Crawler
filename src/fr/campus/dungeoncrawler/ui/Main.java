@@ -12,6 +12,9 @@ import fr.campus.dungeoncrawler.item.*;
 import fr.campus.dungeoncrawler.game.Game;
 import fr.campus.dungeoncrawler.exception.OutOfBoardException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
@@ -21,10 +24,13 @@ public class Main {
     private static final int FINAL_POSITION = 64;
     private static Board customBoard;
 
-
     public static void main(String[] args) {
+        // 🎬 Afficher le titre ASCII avec effet machine à écrire
+        afficherTitreAnime("src/ressources/title.txt");
+
         DatabaseManager dbManager = new DatabaseManager();
         Scanner scanner = new Scanner(System.in);
+
         try {
             dbManager.connect();
 
@@ -70,7 +76,7 @@ public class Main {
                         System.out.print("Nom du héros : ");
                         String name = scanner.nextLine();
 
-                        // Choix de la classe (ajouté pour cohérence)
+                        // Choix de la classe
                         System.out.print("Classe (warrior/wizard) : ");
                         String classType = scanner.nextLine().toLowerCase();
 
@@ -88,10 +94,8 @@ public class Main {
                         Character newHero;
 
                         if (classType.equals("wizard")) {
-                            // Suppose que tu as un constructeur Wizard adapté
                             newHero = new Wizard(0, name, health, attack, strength, sword);
                         } else {
-                            // Par défaut warrior
                             newHero = new Warrior(0, name, health, attack, strength, sword);
                         }
 
@@ -144,10 +148,10 @@ public class Main {
     public static Board createCustomBoard() {
         Board customBoard = new Board(true);
 
-        // Placer ennemis, potions, armes, sorts (comme avant)
+        // Placer ennemis, potions, armes, sorts
         customBoard.setCell(0, 0, new EnemyCell(customBoard, 0, 0, new Gobelin()));
-        customBoard.setCell(0, 2, new EnemyCell(customBoard, 0,2, new Sorcier()));
-        customBoard.setCell(1, 3, new EnemyCell(customBoard,1 ,3 ,new Dragon()));
+        customBoard.setCell(0, 2, new EnemyCell(customBoard, 0, 2, new Sorcier()));
+        customBoard.setCell(1, 3, new EnemyCell(customBoard, 1, 3, new Dragon()));
 
         customBoard.setCell(1, 1, new PotionCell(new Potion("potion", 5)));
         customBoard.setCell(2, 2, new PotionCell(new GrandePotion()));
@@ -156,11 +160,11 @@ public class Main {
         customBoard.setCell(4, 0, new SpellCell(new Eclair()));
         customBoard.setCell(4, 1, new SpellCell(new BouleDeFeu()));
 
-        // Remplir le reste avec EmptyCell sur toute la grille 8x8
+        // Remplir le reste avec EmptyCell
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
                 if (customBoard.getCell(x, y) == null) {
-                    customBoard.setCell(x, y, new fr.campus.dungeoncrawler.Board.EmptyCell(customBoard, x ,y ));
+                    customBoard.setCell(x, y, new EmptyCell(customBoard, x, y));
                 }
             }
         }
@@ -169,9 +173,26 @@ public class Main {
         System.out.println("\n🗺️ Plateau personnalisé :\n");
         customBoard.displayBoard();
 
-        // Retourner la liste complète de 64 cases
         return customBoard;
     }
+
+    /**
+     * Affiche le titre ASCII en lisant un fichier et en affichant caractère par caractère
+     */
+    private static void afficherTitreAnime(String cheminFichier) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
+            String ligne;
+            while ((ligne = reader.readLine()) != null) {
+                for (char c : ligne.toCharArray()) {
+                    System.out.print(c);
+                    Thread.sleep(2); // vitesse d’affichage
+                }
+                System.out.println();
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement du titre : " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
-
-
