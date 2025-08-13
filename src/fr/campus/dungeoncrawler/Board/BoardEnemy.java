@@ -1,5 +1,6 @@
 package fr.campus.dungeoncrawler.Board;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import fr.campus.dungeoncrawler.character.Character;
 import fr.campus.dungeoncrawler.combat.TurnBasedCombat;
 import fr.campus.dungeoncrawler.dice.Dice;
@@ -7,7 +8,13 @@ import fr.campus.dungeoncrawler.dice.Dice20;
 import fr.campus.dungeoncrawler.enemy.Enemy;
 import fr.campus.dungeoncrawler.game.GameStatus;
 
+@JsonTypeName("boardEnemy")
 public class BoardEnemy extends Enemy {
+
+    // Constructeur par défaut requis pour Jackson
+    public BoardEnemy() {
+        super(0, "", 0, 0, 0, null);
+    }
 
     public BoardEnemy(String name, int health, int attack) {
         super(0, name, health, attack, 0, null);

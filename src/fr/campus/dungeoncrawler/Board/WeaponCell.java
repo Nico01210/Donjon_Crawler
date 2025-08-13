@@ -12,8 +12,22 @@ public class WeaponCell extends Cell {
 
     private Weapon weapon;
 
+    // Constructeur par défaut requis pour Jackson
+    public WeaponCell() {
+        super();
+    }
+
     public WeaponCell(Board board, int x, int y, Weapon weapon) {
         super(board, x, y);
+        this.weapon = weapon;
+    }
+
+    // Getter et setter pour Jackson
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
 

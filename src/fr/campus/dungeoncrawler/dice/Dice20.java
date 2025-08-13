@@ -7,6 +7,7 @@ public class Dice20 implements fr.campus.dungeoncrawler.dice.Dice {
 
     @Override
     public int roll() {
-        return random.nextInt(20) + 1;
+        int result = random.nextInt(20) + 1;
+        return result;
     }
 }

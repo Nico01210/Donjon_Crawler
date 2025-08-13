@@ -6,7 +6,9 @@ import java.util.List;
 
 import fr.campus.dungeoncrawler.character.Character;
 import fr.campus.dungeoncrawler.character.Warrior;
+import fr.campus.dungeoncrawler.character.Wizard;
 import fr.campus.dungeoncrawler.item.Weapon;
+import fr.campus.dungeoncrawler.item.Spell;
 
 public class DatabaseManager {
 
@@ -31,7 +33,7 @@ public class DatabaseManager {
     // Récupère la liste des héros depuis la BDD
     public List<Character> getHeroesList() throws SQLException {
         List<Character> heroes = new ArrayList<>();
-        String query = "SELECT * FROM `Character`";
+        String query = "SELECT * FROM `character`";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -43,9 +45,17 @@ public class DatabaseManager {
                 int strength = rs.getInt("Strength");
                 String offEquip = rs.getString("OffensiveEquipment");
 
-                // Création simplifiée : on crée un Warrior (à adapter selon type)
-                Weapon weapon = (offEquip != null) ? new Weapon(offEquip, 10) : null;
-                Character hero = new Warrior(id, name, lifePoints, lifePoints, strength, weapon);
+                // Création selon le type stocké en base
+                Character hero;
+                if ("Wizard".equals(type)) {
+                    // Créer un magicien avec un sort par défaut
+                    Spell defaultSpell = new Spell(offEquip != null ? offEquip : "Sort basique", 8);
+                    hero = new Wizard(id, name, lifePoints, lifePoints, strength, defaultSpell);
+                } else {
+                    // Créer un guerrier avec une arme
+                    Weapon weapon = new Weapon(offEquip != null ? offEquip : "Épée standard", 10);
+                    hero = new Warrior(id, name, lifePoints, lifePoints, strength, weapon);
+                }
 
                 heroes.add(hero);
             }

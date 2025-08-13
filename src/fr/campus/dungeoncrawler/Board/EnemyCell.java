@@ -3,6 +3,7 @@ package fr.campus.dungeoncrawler.Board;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import fr.campus.dungeoncrawler.enemy.Enemy;
 import fr.campus.dungeoncrawler.character.Character;
+import fr.campus.dungeoncrawler.character.Wizard;
 import fr.campus.dungeoncrawler.Board.Cell;
 import fr.campus.dungeoncrawler.Board.BoardEnemy;
 import fr.campus.dungeoncrawler.Board.EmptyCell;
@@ -12,6 +13,11 @@ import fr.campus.dungeoncrawler.game.GameStatus;
 public class EnemyCell extends Cell {
 
     private BoardEnemy enemy;
+
+    // Constructeur par défaut requis pour Jackson
+    public EnemyCell() {
+        super();
+    }
 
     public EnemyCell(Board board, int x, int y, BoardEnemy enemy) {
         super(board, x, y);
@@ -37,8 +43,19 @@ public class EnemyCell extends Cell {
             return;
         }
 
-        System.out.println("⚔️ Un " + enemy.getName() + " apparaît !");
-        System.out.println("👹 " + enemy.getName() + " (Vie: " + enemy.getHealth() + ", Attaque: " + enemy.getAttack() + ")");
+        // Vérifier si l'ennemi a une logique d'interaction spéciale
+        if (enemy.getName().equals("Mauvais Esprit")) {
+            enemy.interact(character);
+            
+            // Si le MauvaisEsprit n'attaque pas (guerrier), on sort de la méthode
+            if (!(character instanceof Wizard)) {
+                return;
+            }
+        } else {
+            // Pour les autres ennemis, affichage standard
+            System.out.println("⚔️ Un " + enemy.getName() + " apparaît !");
+            System.out.println("👹 " + enemy.getName() + " (Vie: " + enemy.getHealth() + ", Attaque: " + enemy.getAttack() + ")");
+        }
 
         // Combat en boucle jusqu’à ce que l’un soit mort
         while (character.getHealth() > 0 && enemy.getHealth() > 0) {

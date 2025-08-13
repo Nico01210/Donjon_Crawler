@@ -42,6 +42,13 @@ public abstract class Character {
     private List<Potion> potions = new ArrayList<>();
 
     /**
+     * Constructeur par défaut requis pour Jackson
+     */
+    public Character() {
+        this.potions = new ArrayList<>();
+    }
+
+    /**
      * Constructeur d'un personnage
      */
     public Character(int id, String name, int health, int attack, int strength, Item offensiveItem) {
@@ -52,6 +59,7 @@ public abstract class Character {
         this.strength = strength;
         this.offensiveItem = offensiveItem;
         this.maxHealth = health;
+        this.potions = new ArrayList<>();
     }
 
     // === Logique de combat ===

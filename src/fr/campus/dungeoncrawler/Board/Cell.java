@@ -1,5 +1,6 @@
 package fr.campus.dungeoncrawler.Board;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.campus.dungeoncrawler.Board.Board;
@@ -14,7 +15,11 @@ import fr.campus.dungeoncrawler.item.Item;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = EnemyCell.class, name = "enemy"),
         @JsonSubTypes.Type(value = PotionCell.class, name = "potion"),
-        // ... autres sous-classes
+        @JsonSubTypes.Type(value = WeaponCell.class, name = "weapon"),
+        @JsonSubTypes.Type(value = SpellCell.class, name = "spell"),
+        @JsonSubTypes.Type(value = ShieldCell.class, name = "shield"),
+        @JsonSubTypes.Type(value = EmptyCell.class, name = "empty"),
+        @JsonSubTypes.Type(value = BasicCell.class, name = "basic")
 })
 
 /*
@@ -26,6 +31,7 @@ public abstract class Cell {
     private int position;
     private Item item;
     private Character character;
+    @JsonIgnore
     protected Board board;
     protected int x;
     protected int y;

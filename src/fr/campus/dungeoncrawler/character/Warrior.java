@@ -5,6 +5,11 @@ import fr.campus.dungeoncrawler.item.Weapon;
 
 public class Warrior extends Character {
 
+    // Constructeur par défaut requis pour Jackson
+    public Warrior() {
+        super(0, "", 0, 0, 0, null);
+    }
+
     public Warrior(int id, String name, int health, int attack, int strength, Item offensiveItem) {
         super(id, name, health, attack, strength, offensiveItem);
     }

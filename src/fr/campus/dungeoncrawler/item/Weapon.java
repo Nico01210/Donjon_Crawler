@@ -1,6 +1,14 @@
 package fr.campus.dungeoncrawler.item;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+@JsonTypeName("weapon")
 public class Weapon extends OffensiveEquipment {
+
+    // Constructeur par défaut requis pour Jackson
+    public Weapon() {
+        super();
+    }
 
     public Weapon(String name, int power) {
         super(name, power);

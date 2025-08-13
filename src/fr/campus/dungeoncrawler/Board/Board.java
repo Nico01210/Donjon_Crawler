@@ -41,7 +41,8 @@ public class Board {
                 pos = positions.get(index++);
                 x = pos % WIDTH;
                 y = pos / WIDTH;
-                boardSetCell(x, y, new EnemyCell(this, x, y, new Dragon())); // ✅ Nouveau Dragon
+                BoardEnemy dragon = new BoardEnemy("Dragon", 15, 4);
+                boardSetCell(x, y, new EnemyCell(this, x, y, dragon)); // ✅ Nouveau Dragon
             }
 
             // 10 Sorciers - ✅ Chaque Sorcier est une NOUVELLE instance
@@ -49,7 +50,8 @@ public class Board {
                  pos = positions.get(index++);
                 x = pos % WIDTH;
                 y = pos / WIDTH;
-                boardSetCell(x, y, new EnemyCell(this, x, y, new Sorcier())); // ✅ Nouveau Sorcier
+                BoardEnemy sorcier = new BoardEnemy("Sorcier", 9, 2);
+                boardSetCell(x, y, new EnemyCell(this, x, y, sorcier)); // ✅ Nouveau Sorcier
             }
 
             // 10 Gobelins - ✅ Chaque Gobelin est une NOUVELLE instance
@@ -57,21 +59,24 @@ public class Board {
                 pos = positions.get(index++);
                 x = pos % WIDTH;
                 y = pos / WIDTH;
-                boardSetCell(x, y, new EnemyCell(this, x, y, new Gobelin())); // ✅ Nouveau Gobelin
+                BoardEnemy gobelin = new BoardEnemy("Gobelin", 6, 1);
+                boardSetCell(x, y, new EnemyCell(this, x, y, gobelin)); // ✅ Nouveau Gobelin
             }
         // 4 Orcs - ✅ Chaque Orc est une NOUVELLE instance
         for (int i = 0; i < 4; i++) {
             pos = positions.get(index++);
             x = pos % WIDTH;
             y = pos / WIDTH;
-            boardSetCell(x, y, new EnemyCell(this, x, y, new Orc())); // ✅ Nouveau Gobelin
+            BoardEnemy orc = new BoardEnemy("Orc", 12, 3);
+            boardSetCell(x, y, new EnemyCell(this, x, y, orc)); // ✅ Nouveau Orc
         }
         // 5 mauvais esprits - ✅ Chaque mauvais esprit est une NOUVELLE instance
         for (int i = 0; i < 5; i++) {
             pos = positions.get(index++);
             x = pos % WIDTH;
             y = pos / WIDTH;
-            boardSetCell(x, y, new EnemyCell(this, x, y, new MauvaisEsprit())); // ✅ Nouveau Gobelin
+            BoardEnemy mauvaisEsprit = new BoardEnemy("Mauvais Esprit", 8, 2);
+            boardSetCell(x, y, new EnemyCell(this, x, y, mauvaisEsprit)); // ✅ Nouveau Mauvais Esprit
         }
 
             // Ajout des bonus (24) - ✅ Nouvelles instances aussi

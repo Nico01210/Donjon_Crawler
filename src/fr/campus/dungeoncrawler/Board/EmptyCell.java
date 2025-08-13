@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import fr.campus.dungeoncrawler.character.Character;
 import fr.campus.dungeoncrawler.game.GameStatus;
 
-@JsonTypeName("enemy")
+@JsonTypeName("empty")
 public class EmptyCell extends Cell {
-    private Board board;
-    private int x;
-    private int y;
+    
+    // Constructeur par défaut requis pour Jackson
+    public EmptyCell() {
+        super();
+    }
 
     public EmptyCell(Board board, int x, int y) {
-        this.board = board;
-        this.x = x;
-        this.y = y;
+        super(board, x, y);
     }
     @Override
     public void interact(Character character, GameStatus gameStatus) {

@@ -7,6 +7,8 @@ public class Dice6 implements Dice {
 
     @Override
     public int roll() {
-        return random.nextInt(6) + 1;
+        int result = random.nextInt(6) + 1;
+        System.out.println("🎲 Lancer de dé à 6 faces : " + result);
+        return result;
     }
 }

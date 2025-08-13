@@ -5,6 +5,7 @@ import fr.campus.dungeoncrawler.Board.*;
 import fr.campus.dungeoncrawler.character.Character;
 import fr.campus.dungeoncrawler.character.Warrior;
 import fr.campus.dungeoncrawler.character.Wizard;
+import fr.campus.dungeoncrawler.dice.Dice6;
 import fr.campus.dungeoncrawler.enemy.Dragon;
 import fr.campus.dungeoncrawler.enemy.Gobelin;
 import fr.campus.dungeoncrawler.enemy.Sorcier;
@@ -25,15 +26,24 @@ public class Game {
 
     private Character player;
     private Board board;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
     private final int FINAL_POSITION = 64;
     private final DatabaseManager dbManager;
     private GameStatus gameStatus;
+    private final Dice6 dice = new Dice6(); // Utilisation de la classe Dice6
 
     public Game(Character player, DatabaseManager dbManager) {
         this.player = player;
         this.dbManager = dbManager;
         this.board = null;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public Game(Character player, DatabaseManager dbManager, Scanner scanner) {
+        this.player = player;
+        this.dbManager = dbManager;
+        this.board = null;
+        this.scanner = scanner;
     }
 
     public void setBoard(Board board) {
@@ -215,9 +225,11 @@ public class Game {
 
         while (player.getPosition() < FINAL_POSITION && player.getHealth() > 0) {
             System.out.println("\nAppuyez sur [Entrée] pour lancer le dé...");
-            scanner.nextLine();
+            
+            // Utiliser la méthode utilitaire pour attendre uniquement Entrée
+            waitForEnterOnly();
 
-            int roll = (int) (Math.random() * 6) + 1;
+            int roll = dice.roll();
             System.out.println("🎲 Dé lancé : " + roll);
 
             player.move(roll);
@@ -316,5 +328,19 @@ public class Game {
                 default -> System.out.println("Choix invalide.");
             }
         }
+    }
+
+    /**
+     * Méthode utilitaire pour attendre que l'utilisateur appuie uniquement sur Entrée
+     */
+    private void waitForEnterOnly() {
+        String input;
+        do {
+            input = scanner.nextLine();
+            if (!input.isEmpty()) {
+                System.out.println("⚠️ Veuillez appuyer uniquement sur [Entrée] pour continuer.");
+                System.out.print("Appuyez sur [Entrée]...");
+            }
+        } while (!input.isEmpty());
     }
 }

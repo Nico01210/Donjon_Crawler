@@ -5,11 +5,26 @@ import fr.campus.dungeoncrawler.character.Character;
 import fr.campus.dungeoncrawler.game.GameStatus;
 import fr.campus.dungeoncrawler.item.Potion;
 
-@JsonTypeName("enemy")
+@JsonTypeName("potion")
 public class PotionCell extends Cell {
-    private final Potion potion;
+    private Potion potion;
+
+    // Constructeur par défaut requis pour Jackson
+    public PotionCell() {
+        super();
+    }
 
     public PotionCell(Potion potion) {
+        super();
+        this.potion = potion;
+    }
+
+    // Getter et setter pour Jackson
+    public Potion getPotion() {
+        return potion;
+    }
+
+    public void setPotion(Potion potion) {
         this.potion = potion;
     }
 

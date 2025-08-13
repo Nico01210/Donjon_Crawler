@@ -2,6 +2,7 @@ package fr.campus.dungeoncrawler.enemy;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.campus.dungeoncrawler.Board.BoardEnemy;
 import fr.campus.dungeoncrawler.character.Character;
 import fr.campus.dungeoncrawler.item.Item;
 
@@ -15,7 +16,8 @@ import fr.campus.dungeoncrawler.item.Item;
         @JsonSubTypes.Type(value = Gobelin.class, name = "gobelin"),
         @JsonSubTypes.Type(value = Sorcier.class, name = "sorcier"),
         @JsonSubTypes.Type(value = Orc.class, name = "orc"),
-        @JsonSubTypes.Type(value = MauvaisEsprit.class, name = "mauvaisEsprit")
+        @JsonSubTypes.Type(value = MauvaisEsprit.class, name = "mauvaisEsprit"),
+        @JsonSubTypes.Type(value = BoardEnemy.class, name = "boardEnemy")
 })
 public class Enemy extends Character {
 
